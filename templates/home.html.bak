@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<style>
+    .text {
+        text-align: center;
+    }
+    .main_image {
+        display: block;
+        width: 90%;
+        max-width: 1000px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .tile_image {
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+    }
+</style>
+<head>
+    <title class="text">Most Recent Boards</title>
+</head>
+<body>
+<div id="main_container" style="width: 90%; margin-left: auto; margin-right: auto">
+    <h1 class="text">Most Recent Boards</h1>
+   <table border="0" cellpadding="20" cellspacing="0" align="center" style="float: center">
+       <tr>
+           <td colspan="2" style="text-align: center"><h3>Current Board</h3></td>
+       <tr>
+           <td colspan="2"><a href="{{ current_img_path_big }}"><img src="{{ current_img_path_sml }}" alt="current board" style="display:block; width: 90%; max-width: 1000px; margin-left: auto; margin-right: auto"></a></td>
+       </tr>
+       {% for photo_pair in photos %}
+            {%- if is_odd %}
+            <tr>
+                <td style="text-align: center">{{ (photo_pair[0]).title}}</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><a href="{{ (photo_pair[0]).big_path }}">
+                        <img src="{{ (photo_pair[0]).small_path }}" alt="{{ (photo_pair[0]).title }}" style="margin-left: auto; margin-right
+            <tr> 
+                <td style="text-align: center">{{ (photo_pair[0]).title }}</td>
+                <td style="text-align: center">{{ (photo_pair[
+       {% endfor %}
+       <tr>
+           <td style="text-align: center">Photo 1</td>
+           <td style="text-align: center">Photo 2</td>
+       </tr>
+       <tr>
+           <td><a href="board-big.jpg"><img src="board.jpg" alt="photo 1" style="margin-left: auto; margin-right: auto; width: 100%"></a></td>
+           <td><a href="board-big.jpg"><img src="board.jpg" alt="photo 2" style="margin-left: auto; margin-right: auto; width: 100%"></a></td>
+       </tr>
+   </table>
+</div>
+</body>
+</html>

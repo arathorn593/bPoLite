@@ -1,0 +1,73 @@
+# Download the twilio-python library from http://twilio.com/docs/libraries
+from twilio.rest import TwilioRestClient
+from flask import Flask, request, redirect, session
+import twilio.twiml
+import serial
+import sys
+
+ser = serial.Serial(sys.argv[1], 115200)
+
+# The session object makes use of a secret key.
+SECRET_KEY = 'a secret key'
+app = Flask(__name__)
+app.config.from_object(__name__)
+
+state = 0
+usr_num = ""
+question = ""
+mod_nums = ["+14027409187", "+12018922065"]
+
+twilio_num = "+14025091476"
+WAIT_ON_QUESTIONdd = 0
+WAIT_ON_MOD = 1
+
+# Find these values at https://twilio.com/user/account
+account_sid = "AC9cd29475371662c58e19b738ea4f746f"
+auth_token = "99ee049db9339bf4389891492e02b508"
+client = TwilioRestClient(account_sid, auth_token)
+ 
+@app.route("/", methods=['GET', 'POST'])
+def hello_monkey():
+    """Respond and greet the caller by name."""
+    global state
+    global usr_num
+    global question
+
+        
+
+
+    if (state == WAIT_ON_QUESTION):
+        msg_body = request.values.get('Body', None)
+        message = "your question is being reviewed, and if approved will be added to the queue"
+ 
+        resp = twilio.twiml.Response()
+        resp.message(message)
+        question = msg_body
+        mod_message = client.messages.create(to=mod_num, from_=twilio_num,
+                                         body="new message to review: \n" + msg_body + 
+                                         "\nReply yes to approve and no to reject")
+        state = WAIT_ON_MOD
+        usr_num = request.values.get('From', None)
+
+        return str(resp)
+    elif (state == WAIT_ON_MOD and usr_num != "") :
+        msg_body = request.values.get('Body', None)
+        msg_body = msg_body.lower();
+
+        if(msg_body == "yes"):
+            usr_message = client.messages.create(to=usr_num, from_=twilio_num,
+                                                 body="your message was approved")
+            output = question + '\n'
+            output_bytes = output.encode('utf-8')
+            ser.write(output_bytes);
+        else:
+            usr_message = client.messages.create(to=usr_num, from_=twilio_num,
+                                                 body="your message was rejected")
+
+        state = WAIT_ON_QUESTION
+        usr_num = ""
+        return ""
+ 
+if __name__ == "__main__":
+    state = 0
+    app.run(debug=True)

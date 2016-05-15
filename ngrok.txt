@@ -1,0 +1,1 @@
+t=2016-04-28T15:21:52+0000 lvl=warn msg="failed to get home directory, using $HOME instead" err="user: Current not implemented on linux/arm" $HOME=/home/pi
